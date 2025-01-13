@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: api-natan
+  labels:
+    app: api-natan
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: pod-natan
+  template:
+    metadata:
+      labels:
+        app: pod-natan
+    spec:
+      containers:
+        - name: pod-container
+          image: hello-world:latest

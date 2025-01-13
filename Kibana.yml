@@ -1,0 +1,52 @@
+# Configurações do servidor Kibana
+server.host: "0.0.0.0"
+
+# Configurações do Elasticsearch
+elasticsearch.hosts: ["http://elasticsearch:9200"]
+elasticsearch.username: "elastic"
+elasticsearch.password: "changeme"
+
+# Configurações do Fleet
+xpack.fleet.enabled: true
+xpack.fleet.elasticsearch.host: "http://elasticsearch:9200"
+xpack.fleet.elasticsearch.username: "elastic"
+xpack.fleet.elasticsearch.password: "changeme"
+xpack.fleet.agentPolicies:
+  - name: Fleet-Server-Policy
+    id: fleet-server-policy
+    namespace: default
+    monitoring_enabled:
+      - logs
+      - metrics
+    package_policies:
+      - name: fleet_server-1
+        package:
+          name: fleet_server
+      - name: system-1
+        package:
+          name: system
+      - name: elastic_agent-1
+        package:
+          name: elastic_agent
+      - name: apm-1
+        package:
+          name: apm
+        inputs:
+          - type: apm
+            enabled: true
+            vars:
+              - name: host
+                value: "0.0.0.0:8200"
+              - name: secret_token
+                value: "${ELASTIC_APM_SECRET_TOKEN}"
+
+# Configurações do APM
+elastic.apm:
+  active: true
+  serverUrl: "http://fleet-server:8200"
+  secretToken: "${ELASTIC_APM_SECRET_TOKEN}"
+
+# Configurações adicionais
+telemetry.enabled: true
+xpack.screenshotting.browser.chromium.disableSandbox: true
+xpack.encryptedSavedObjects.encryptionKey: "W7m9dN93sM2wDpJ4lR06cXwA5bGvn3J6"

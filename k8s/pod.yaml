@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-natan
+  labels:
+    app: api-natan
+spec:
+  containers:
+    - name: my-container
+      image: hello-world:latest
+
+

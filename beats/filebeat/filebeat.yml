@@ -1,0 +1,60 @@
+# ============================== Filebeat inputs ===============================
+
+filebeat.inputs:
+
+  - type: log
+    enabled: true
+    paths:
+      - /var/log/*.log
+
+  - type: filestream
+    enabled: false
+    paths:
+      - /var/log/*.log
+
+# ============================== Filebeat modules ==============================
+
+filebeat.config.modules:
+  path: ${path.config}/modules.d/*.yml
+  reload.enabled: false
+
+# ======================= Elasticsearch template setting =======================
+
+setup.template.settings:
+  index.number_of_shards: 1
+
+# ================================== General ===================================
+# Geralmente configurado para o nome e tags do shipper
+
+# ================================= Dashboards =================================
+setup.dashboards.enabled: true
+setup.kibana:
+  host: "kibana:5601"
+
+# =============================== Elastic Cloud ================================
+# Configurações para usar com Elastic Cloud, se necessário
+
+# ================================== Outputs ===================================
+# Aqui estamos configurando apenas o output para o Elasticsearch ou Logstash.
+
+# ------------------------------ Elasticsearch Output ----------------------------
+output.elasticsearch:
+  hosts: ["elasticsearch:9200"]
+  username: "elastic"
+  password: "changeme"
+
+# ------------------------------ Logstash Output -------------------------------
+# output.logstash está comentado, remova o comentário se for o seu caso
+# output.logstash:
+#   hosts: ["localhost:5044"]
+
+# ================================= Processors =================================
+processors:
+  - add_host_metadata:
+      when.not.contains.tags: forwarded
+  - add_cloud_metadata: ~
+  - add_docker_metadata: ~
+  - add_kubernetes_metadata: ~
+
+# ================================== Logging ===================================
+logging.level: debug

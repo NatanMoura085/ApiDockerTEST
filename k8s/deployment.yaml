@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-natan
+  labels:
+    app: api-natan
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: api-natan
+  template:
+    metadata:
+      labels:
+        app: api-natan
+    spec:
+      containers:
+        - name: nginx-container
+          image: nginx:latest
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: 0.5
+              memory: 20Mi
+            limits:
+              cpu: 0.5
+              memory: 25Mi
+
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            periodSeconds: 5
+            timeoutSeconds: 1
+            successThreshold: 1
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            periodSeconds: 5
+            timeoutSeconds: 1
+            successThreshold: 1
+            failureThreshold: 3
+          startupProbe:
+            httpGet:
+              path: /
+              port: 80
+            timeoutSeconds: 1
+            periodSeconds: 5
+            failureThreshold: 3
+
+          volumeMounts:
+            - mountPath: "/go/pvc"
+              name: api-natan-volume
+              readOnly: true
+
+      volumes:
+        - name: api-natan-volume
+          persistentVolumeClaim:
+            claimName: api-natan-pvc
