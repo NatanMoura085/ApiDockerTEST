@@ -1,17 +1,22 @@
 package com.docker.ApiDockerTEST.controllers;
 
-import co.elastic.apm.api.ElasticApm;
-import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
+import com.docker.ApiDockerTEST.service.CustomMetricService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class HelloWorldController {
-    private ElasticsearchOperations elasticsearchOperations;
-    public HelloWorldController(ElasticsearchOperations elasticsearchOperations) {
-        this.elasticsearchOperations = elasticsearchOperations;
+    // private ElasticsearchOperations elasticsearchOperations;
+    //  public HelloWorldController(ElasticsearchOperations elasticsearchOperations) {
+    //    this.elasticsearchOperations = elasticsearchOperations;
 
+    //  }
+
+    private CustomMetricService customMetricService;
+
+    public HelloWorldController(CustomMetricService customMetricService) {
+        this.customMetricService = customMetricService;
     }
 
     @GetMapping("/")
@@ -21,9 +26,10 @@ public class HelloWorldController {
 
     @GetMapping("/sayHello")
     public String sayHello(Model model) {
-        ElasticApm.startTransaction().setName("Natan minha api");
+        customMetricService.trackCustomMetric();
+        // ElasticApm.startTransaction().setName("Natan minha api");
         model.addAttribute("message", "Hello World");
-        elasticsearchOperations.save(model);
+        // elasticsearchOperations.save(model);
         return "index";
     }
 }
