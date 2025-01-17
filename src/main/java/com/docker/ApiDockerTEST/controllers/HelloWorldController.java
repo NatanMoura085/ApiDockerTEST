@@ -19,7 +19,7 @@ public class HelloWorldController {
         this.customMetricService = customMetricService;
     }
 
-    @GetMapping("/")
+    @GetMapping("/ola")
     public String home(Model model) {
         return "index";
     }

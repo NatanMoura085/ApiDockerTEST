@@ -3,6 +3,7 @@ version: '3'
 services:
   prometheus:
     image: prom/prometheus
+    user: "0:0"
     container_name: prometheus
     depends_on:
       - cadvisor
